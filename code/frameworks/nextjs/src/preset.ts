@@ -139,3 +139,11 @@ export const webpackFinal: StorybookConfig['webpackFinal'] = async (baseConfig, 
 
   return baseConfig;
 };
+
+export const parameters = {
+  docs: {
+    source: {
+      excludeDecorators: true,
+    },
+  },
+};
