@@ -1,3 +1,4 @@
+/* eslint-disable global-require, import/no-dynamic-require */
 import findUp from 'find-up';
 import { dirname } from 'path';
 import type { SupportedFrameworks, SupportedRenderers } from './project_types';
@@ -14,7 +15,10 @@ const resolveUsingPnpAPI = (request: string, cwd: string) => {
   pnpFileCache[cwd] = pnpFileCache[cwd] || findUp.sync('.pnp.cjs', { cwd, type: 'file' });
   const pnpFile = pnpFileCache[cwd];
   if (pnpFile) {
-    pnpAPICache[pnpFile] = pnpAPICache[pnpFile] || require(pnpFile); // eslint-disable-line import/no-dynamic-require, global-require
+    if (!pnpAPICache[pnpFile]) {
+      pnpAPICache[pnpFile] = require(pnpFile);
+      pnpAPICache[pnpFile].setup();
+    }
     const pnpPath = pnpAPICache[pnpFile].resolveRequest(request, cwd);
     if (pnpPath) {
       return pnpPath;
