@@ -78,16 +78,20 @@ export async function configureMain({
     .replace(/['"]%%/g, '')
     .replace(/%%['"]/g, '');
 
-  const imports = isTypescript
-    ? [`import type { StorybookConfig } from '${frameworkPackage}';\n\n`]
-    : [`/** @type { import('${frameworkPackage}').StorybookConfig } */\n`];
+  const imports = [];
 
   if (custom.framework?.name.includes('path.dirname(')) {
     imports.push(`import path from 'path';`);
   }
 
+  if (isTypescript) {
+    imports.push(`import type { StorybookConfig } from '${frameworkPackage}';`);
+  } else {
+    imports.push(`/** @type { import('${frameworkPackage}').StorybookConfig } */`);
+  }
+
   const mainJsContents = mainConfigTemplate
-    .replace('<<import>>', imports.join('\n'))
+    .replace('<<import>>', `${imports.join('\n\n')}\n`)
     .replace('<<type>>', isTypescript ? ': StorybookConfig' : '')
     .replace('<<mainContents>>', mainContents);
   await fse.writeFile(
