@@ -79,10 +79,10 @@ export async function configureMain({
     .replace(/%%['"]/g, '');
 
   const imports = isTypescript
-    ? [`import type { StorybookConfig } from '${custom.framework.name}';\n\n`]
-    : [`/** @type { import('${custom.framework.name}').StorybookConfig } */\n`];
+    ? [`import type { StorybookConfig } from '${frameworkPackage}';\n\n`]
+    : [`/** @type { import('${frameworkPackage}').StorybookConfig } */\n`];
 
-  if (mainContents.includes('%%path.dirname(require.resolve')) {
+  if (custom.framework?.name.includes('path.dirname(')) {
     imports.push(`import path from 'path'`);
   }
 
