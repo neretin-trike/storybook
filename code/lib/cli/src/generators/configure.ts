@@ -83,11 +83,11 @@ export async function configureMain({
     : [`/** @type { import('${frameworkPackage}').StorybookConfig } */\n`];
 
   if (custom.framework?.name.includes('path.dirname(')) {
-    imports.push(`import path from 'path'`);
+    imports.push(`import path from 'path';`);
   }
 
   const mainJsContents = mainConfigTemplate
-    .replace('<<import>>', imports.join(''))
+    .replace('<<import>>', imports.join('\n'))
     .replace('<<type>>', isTypescript ? ': StorybookConfig' : '')
     .replace('<<mainContents>>', mainContents);
   await fse.writeFile(
