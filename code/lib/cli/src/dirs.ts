@@ -39,11 +39,17 @@ export function getRendererDir(renderer: SupportedFrameworks | SupportedRenderer
     //
   }
 
-  try {
-    resolved = resolveUsingPnpAPI(packageJsonPath, process.cwd());
-  } catch (e) {
-    //
+  if (!resolved) {
+    try {
+      resolved = resolveUsingPnpAPI(packageJsonPath, process.cwd());
+    } catch (e) {
+      //
+    }
   }
 
-  return dirname(resolved);
+  if (resolved) {
+    return dirname(resolved);
+  }
+
+  throw new Error(`Cannot find ${packageJsonPath}`);
 }
