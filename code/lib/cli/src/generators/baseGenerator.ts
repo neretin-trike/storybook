@@ -73,7 +73,6 @@ const getFrameworkDetails = (
   rendererId: SupportedRenderers;
 } => {
   const frameworkPackage = getFrameworkPackage(framework, renderer, builder);
-
   const frameworkPackagePath = pnp ? wrapForPnp(frameworkPackage) : frameworkPackage;
 
   const rendererPackage = `@storybook/${renderer}`;

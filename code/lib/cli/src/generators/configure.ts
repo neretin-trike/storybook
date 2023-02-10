@@ -50,18 +50,22 @@ export async function configureMain({
   const mainConfigTemplate = dedent`<<import>>const config<<type>> = <<mainContents>>;
   export default config;`;
 
-  const mainJsContents = mainConfigTemplate
-    .replace(
-      '<<import>>',
-      isTypescript
-        ? `import type { StorybookConfig } from '${custom.framework.name}';\n\n`
-        : `/** @type { import('${custom.framework.name}').StorybookConfig } */\n`
-    )
-    .replace('<<type>>', isTypescript ? ': StorybookConfig' : '')
-    .replace('<<mainContents>>', JSON.stringify(config, null, 2))
+  const mainContents = JSON.stringify(config, null, 2)
     .replace(/['"]%%/g, '')
     .replace(/%%['"]/g, '');
 
+  const imports = isTypescript
+    ? [`import type { StorybookConfig } from '${custom.framework.name}';\n\n`]
+    : [`/** @type { import('${custom.framework.name}').StorybookConfig } */\n`];
+
+  if (mainContents.includes('%%path.dirname(require.resolve')) {
+    imports.push(`import path from 'path'`);
+  }
+
+  const mainJsContents = mainConfigTemplate
+    .replace('<<import>>', imports.join(''))
+    .replace('<<type>>', isTypescript ? ': StorybookConfig' : '')
+    .replace('<<mainContents>>', mainContents);
   await fse.writeFile(
     `./${storybookConfigFolder}/main.${isTypescript ? 'ts' : 'js'}`,
     dedent(mainJsContents),
