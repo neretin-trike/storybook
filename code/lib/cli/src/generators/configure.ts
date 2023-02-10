@@ -58,7 +58,9 @@ export async function configureMain({
         : `/** @type { import('${custom.framework.name}').StorybookConfig } */\n`
     )
     .replace('<<type>>', isTypescript ? ': StorybookConfig' : '')
-    .replace('<<mainContents>>', JSON.stringify(config, null, 2));
+    .replace('<<mainContents>>', JSON.stringify(config, null, 2))
+    .replace(/['"]%%/g, '')
+    .replace(/%%['"]/g, '');
 
   await fse.writeFile(
     `./${storybookConfigFolder}/main.${isTypescript ? 'ts' : 'js'}`,
