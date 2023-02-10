@@ -29,7 +29,9 @@ export const addPackageResolutions = async ({ cwd, dryRun }: YarnOptions) => {
 };
 
 export const installYarn2 = async ({ cwd, dryRun, debug }: YarnOptions) => {
-  const { stdout } = await execaCommand(`yarn config --json`, { cwd });
+  const { stdout } = await execaCommand(`yarn config --json`, { cwd }).catch(() => ({
+    stdout: '',
+  }));
   const pnpApiExists = await pathExists(path.join(cwd, '.pnp.cjs'));
 
   const data = JSON.parse(`[${stdout.replaceAll('\n', ',')}]`);
