@@ -46,7 +46,7 @@ export const installYarn2 = async ({ cwd, dryRun, debug }: YarnOptions) => {
     `yarn config set checksumBehavior ignore`,
   ];
 
-  if (!nodeLinkerConfig.source && !pnpApiExists) {
+  if (!nodeLinkerConfig?.source && !pnpApiExists) {
     command.push(`yarn config set nodeLinker node-modules`);
   }
 
